@@ -1,4 +1,4 @@
-# cveResponder backend dependencies
+# cveResponderAI backend dependencies
 # Python 3.8+
 
 flask>=2.3.0,<4
