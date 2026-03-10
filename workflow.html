@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cveResponderAI - Analysis Workflow</title>
+    <meta name="description" content="CVE analysis workflow with detection rules and threat intelligence.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background Effects -->
+    <div id="particles-js"></div>
+    <div class="ambient-glow"></div>
+
+    <!-- Header -->
+    <header class="header glass-panel"
+        style="border-radius: 0; border-top: none; border-left: none; border-right: none; flex-shrink: 0;">
+        <a href="index.html" class="logo">
+            <div class="logo-icon">
+                <span class="material-symbols-outlined" style="font-size: 20px;">emergency</span>
+            </div>
+            <span class="logo-text">cveResponderAI</span>
+        </a>
+
+        <div class="flex items-center gap-3">
+            <div class="workflow-model-badge flex items-center gap-2">
+                <span class="material-symbols-outlined workflow-model-icon">smart_toy</span>
+                <span id="workflow-model-name" class="workflow-model-name text-xs">Model: Loading...</span>
+            </div>
+
+            <!-- Theme Toggle Button -->
+            <button id="theme-toggle" class="btn-ghost" style="padding: 8px; border-radius: 8px;" title="Toggle theme">
+                <span class="material-symbols-outlined" id="theme-icon">light_mode</span>
+            </button>
+
+            <a href="index.html" class="btn btn-ghost text-sm">
+                <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span>
+                Back to Dashboard
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="workflow-layout relative z-10" style="flex: 1; overflow: hidden;">
+        <!-- LEFT PANEL -->
+        <aside class="workflow-sidebar">
+            <!-- CVE Metadata Card -->
+            <div class="glass-panel-solid cve-metadata">
+                <div class="flex justify-between" style="align-items: flex-start;">
+                    <div>
+                        <div class="flex items-center gap-3" style="margin-bottom: 8px;">
+                            <span id="cve-severity" class="badge badge-processing">Loading...</span>
+                            <span id="cve-date" class="text-xs font-mono" style="color: var(--text-muted);">Published:
+                                ...</span>
+                        </div>
+                        <h1 id="cve-id" class="text-3xl font-bold tracking-tight" style="margin-bottom: 4px;">
+                            Loading CVE...</h1>
+                        <p id="cve-description" class="text-sm" style="color: var(--text-muted);">Fetching vulnerability
+                            data...</p>
+                    </div>
+
+                    <!-- CVSS Gauge -->
+                    <div class="cvss-gauge" aria-label="CVSS score">
+                        <svg viewBox="0 0 36 36" class="cvss-gauge-svg" aria-hidden="true">
+                            <path class="track"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831">
+                            </path>
+                            <path id="cvss-progress" class="progress"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                stroke-dasharray="98, 100"></path>
+                        </svg>
+                        <div class="cvss-gauge-value">
+                            <span id="cvss-score" class="cvss-gauge-score">--</span>
+                            <span class="cvss-gauge-label">CVSS</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Metrics Grid -->
+                <div class="metrics-grid-compact" style="margin-top: 24px;">
+                    <div class="metric-card-sleek">
+                        <div class="metric-header-sleek">
+                            <span class="material-symbols-outlined metric-icon-sleek">navigation</span>
+                            <span class="metric-label-sleek">Vector</span>
+                        </div>
+                        <span id="metric-vector" class="metric-value-sleek">...</span>
+                    </div>
+                    <div class="metric-card-sleek">
+                        <div class="metric-header-sleek">
+                            <span class="material-symbols-outlined metric-icon-sleek">psychology</span>
+                            <span class="metric-label-sleek">Complexity</span>
+                        </div>
+                        <span id="metric-complexity" class="metric-value-sleek">...</span>
+                    </div>
+                    <div class="metric-card-sleek">
+                        <div class="metric-header-sleek">
+                            <span class="material-symbols-outlined metric-icon-sleek">key</span>
+                            <span class="metric-label-sleek">Privileges</span>
+                        </div>
+                        <span id="metric-privileges" class="metric-value-sleek">...</span>
+                    </div>
+                    <div class="metric-card-sleek">
+                        <div class="metric-header-sleek">
+                            <span class="material-symbols-outlined metric-icon-sleek">show_chart</span>
+                            <span class="metric-label-sleek">EPSS</span>
+                        </div>
+                        <span id="metric-epss" class="metric-value-sleek">...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis Progress -->
+            <div class="glass-panel-solid" style="padding: 24px; flex: 1;">
+                <div class="flex items-center justify-between" style="margin-bottom: 24px;">
+                    <h2 class="text-lg font-semibold flex items-center gap-2" style="color: var(--text-primary);">
+                        <span class="material-symbols-outlined"
+                            style="color: var(--primary); animation: pulse 2s ease-in-out infinite;">auto_awesome</span>
+                        Analysis Workflow
+                    </h2>
+                    <span class="badge badge-processing">Processing</span>
+                </div>
+
+                <div class="workflow-steps">
+                    <div class="workflow-step pending">
+                        <div class="indicator"></div>
+                        <div>
+                            <span class="title">NVD Data Retrieval</span>
+                            <p class="description">Waiting...</p>
+                            <div class="progress-bar" style="margin-top: 12px; visibility: hidden;">
+                                <div class="fill" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="workflow-step pending">
+                        <div class="indicator"></div>
+                        <div>
+                            <span class="title">PoC Search</span>
+                            <p class="description">Waiting...</p>
+                            <div class="progress-bar" style="margin-top: 12px; visibility: hidden;">
+                                <div class="fill" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="workflow-step pending">
+                        <div class="indicator"></div>
+                        <div>
+                            <span class="title">News</span>
+                            <p class="description">Waiting...</p>
+                            <div class="progress-bar" style="margin-top: 12px; visibility: hidden;">
+                                <div class="fill" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="workflow-step pending">
+                        <div class="indicator"></div>
+                        <div>
+                            <span class="title">MITRE ATT&CK Mapping</span>
+                            <p class="description">Waiting...</p>
+                            <div class="progress-bar" style="margin-top: 12px; visibility: hidden;">
+                                <div class="fill" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="workflow-step pending">
+                        <div class="indicator"></div>
+                        <div>
+                            <span class="title">IR Plan</span>
+                            <p class="description">Waiting...</p>
+                            <div class="progress-bar" style="margin-top: 12px; visibility: hidden;">
+                                <div class="fill" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="workflow-step pending">
+                        <div class="indicator"></div>
+                        <div>
+                            <span class="title">Report Complete</span>
+                            <p class="description">Waiting...</p>
+                            <div class="progress-bar" style="margin-top: 12px; visibility: hidden;">
+                                <div class="fill" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- RIGHT PANEL -->
+        <section class="workflow-main glass-panel-solid">
+            <!-- Tab Navigation: Analysis, Affected, PoC, IR Plan, MITRE -->
+            <div class="tabs">
+                <button class="tab active" data-tab="analysis">
+                    Analysis
+                    <span class="indicator"></span>
+                </button>
+                <button class="tab" data-tab="affected">Affected Products</button>
+                <button class="tab poc-tab" data-tab="poc">
+                    <span class="material-symbols-outlined"
+                        style="font-size: 15px; vertical-align: middle;">bug_report</span>
+                    PoC Explainer
+                </button>
+                <button class="tab" data-tab="news">News</button>
+                <button class="tab" data-tab="mitre">MITRE ATT&CK</button>
+                <button class="tab" data-tab="irplan">IR Plan</button>
+            </div>
+
+            <!-- Analysis Tab Content -->
+            <div id="tab-content-analysis" class="tab-content"
+                style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
+                <div id="analysis-content" class="analysis-content" style="flex: 1; overflow-y: auto; padding: 24px;">
+                    <!-- skeleton: description + cvss + cwe + ai summary -->
+                    <div class="skeleton-section">
+                        <div class="sk-header-row">
+                            <span class="skeleton-block sk-icon"></span>
+                            <span class="skeleton-block sk-title" style="margin-bottom:0;"></span>
+                        </div>
+                        <div class="skeleton-block sk-line sk-line-full"></div>
+                        <div class="skeleton-block sk-line sk-line-90"></div>
+                        <div class="skeleton-block sk-line sk-line-75"></div>
+                        <div class="skeleton-block sk-line sk-line-60"></div>
+                    </div>
+                    <div class="skeleton-section">
+                        <div class="sk-header-row">
+                            <span class="skeleton-block sk-icon"></span>
+                            <span class="skeleton-block sk-title" style="margin-bottom:0; width:30%;"></span>
+                        </div>
+                        <div class="sk-cvss-grid">
+                            <div class="skeleton-block sk-card"></div>
+                            <div class="skeleton-block sk-card"></div>
+                            <div class="skeleton-block sk-card"></div>
+                            <div class="skeleton-block sk-card"></div>
+                        </div>
+                    </div>
+                    <div class="skeleton-section">
+                        <div class="sk-header-row">
+                            <span class="skeleton-block sk-icon"></span>
+                            <span class="skeleton-block sk-title" style="margin-bottom:0; width:25%;"></span>
+                        </div>
+                        <div class="sk-pill-row">
+                            <div class="skeleton-block sk-pill"></div>
+                            <div class="skeleton-block sk-pill" style="width:100px;"></div>
+                        </div>
+                    </div>
+                    <div class="skeleton-section">
+                        <div class="sk-header-row">
+                            <span class="skeleton-block sk-icon"></span>
+                            <span class="skeleton-block sk-title" style="margin-bottom:0; width:40%;"></span>
+                        </div>
+                        <div class="skeleton-block sk-line sk-line-full"></div>
+                        <div class="skeleton-block sk-line sk-line-90"></div>
+                        <div class="skeleton-block sk-line sk-line-full"></div>
+                        <div class="skeleton-block sk-line sk-line-75"></div>
+                        <div class="skeleton-block sk-line sk-line-40"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Affected Products Tab Content -->
+            <div id="tab-content-affected" class="tab-content"
+                style="flex: 1; display: none; flex-direction: column; overflow: hidden;">
+                <div id="affected-content" style="flex: 1; overflow-y: auto; padding: 24px;">
+                    <!-- skeleton: vendor group + product cards -->
+                    <div style="margin-bottom: 28px;">
+                        <div class="skeleton-block sk-line" style="height:13px; width:120px; margin-bottom:12px;"></div>
+                        <div
+                            style="display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:12px;">
+                            <div class="skeleton-block sk-card" style="height:72px; border-radius:12px;"></div>
+                            <div class="skeleton-block sk-card" style="height:72px; border-radius:12px;"></div>
+                            <div class="skeleton-block sk-card" style="height:72px; border-radius:12px;"></div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 28px;">
+                        <div class="skeleton-block sk-line" style="height:13px; width:100px; margin-bottom:12px;"></div>
+                        <div
+                            style="display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:12px;">
+                            <div class="skeleton-block sk-card" style="height:72px; border-radius:12px;"></div>
+                            <div class="skeleton-block sk-card" style="height:72px; border-radius:12px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- IR Plan Tab Content -->
+            <div id="tab-content-irplan" class="tab-content"
+                style="flex: 1; display: none; flex-direction: column; overflow: hidden;">
+                <div id="irplan-content" style="flex: 1; overflow-y: auto; padding: 24px;">
+                    <!-- skeleton: IR header + detection + mitigation -->
+                    <div style="margin-bottom: 24px;">
+                        <div class="skeleton-block sk-line"
+                            style="height:20px; width:220px; margin-bottom:8px; border-radius:8px;"></div>
+                        <div class="skeleton-block sk-line sk-line-40" style="height:11px;"></div>
+                    </div>
+                    <div class="skeleton-section">
+                        <div class="sk-header-row">
+                            <span class="skeleton-block sk-icon"></span>
+                            <span class="skeleton-block sk-title" style="margin-bottom:0; width:35%;"></span>
+                        </div>
+                        <div class="skeleton-block sk-line sk-line-full"></div>
+                        <div class="skeleton-block sk-line sk-line-90"></div>
+                        <div class="skeleton-block sk-line sk-line-75"></div>
+                        <div class="skeleton-block sk-line sk-line-full"></div>
+                        <div class="skeleton-block sk-line sk-line-60"></div>
+                    </div>
+                    <div class="skeleton-section">
+                        <div class="sk-header-row">
+                            <span class="skeleton-block sk-icon"></span>
+                            <span class="skeleton-block sk-title" style="margin-bottom:0; width:30%;"></span>
+                        </div>
+                        <div class="skeleton-block sk-line sk-line-full"></div>
+                        <div class="skeleton-block sk-line sk-line-90"></div>
+                        <div class="skeleton-block sk-line sk-line-full"></div>
+                        <div class="skeleton-block sk-line sk-line-75"></div>
+                        <div class="skeleton-block sk-line sk-line-40"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PoC Explainer Tab Content -->
+            <div id="tab-content-poc" class="tab-content"
+                style="flex: 1; display: none; flex-direction: column; overflow: hidden;">
+                <div id="poc-content" style="flex: 1; overflow-y: auto; padding: 24px;">
+
+                    <!-- PoC Discovery Card -->
+                    <div class="poc-discovery-card section-reveal">
+                        <div class="poc-discovery-header">
+                            <div class="poc-discovery-title">
+                                <span class="material-symbols-outlined"
+                                    style="color: var(--primary);">travel_explore</span>
+                                <h3>PoC Discovery</h3>
+                            </div>
+                            <button id="poc-search-btn" class="btn btn-primary poc-search-btn"
+                                style="font-size: 13px; padding: 8px 16px;">
+                                <span class="material-symbols-outlined" style="font-size: 16px;">search</span>
+                                Search GitHub
+                            </button>
+                        </div>
+
+                        <div class="poc-meta-grid">
+                            <div class="poc-meta-item">
+                                <span class="poc-meta-label">AVAILABILITY</span>
+                                <span id="poc-availability" class="poc-meta-value poc-availability-public">
+                                    <span class="poc-dot"></span>
+                                    Searching...
+                                </span>
+                            </div>
+                            <div class="poc-meta-item">
+                                <span class="poc-meta-label">SOURCE</span>
+                                <span id="poc-source" class="poc-meta-value poc-source-link">GitHub</span>
+                            </div>
+                            <div class="poc-meta-item">
+                                <span class="poc-meta-label">LANGUAGE</span>
+                                <span id="poc-language" class="poc-meta-value">—</span>
+                            </div>
+                            <div class="poc-meta-item">
+                                <span class="poc-meta-label">EXPLOIT TYPE</span>
+                                <span id="poc-exploit-type" class="poc-meta-value poc-type-rce">—</span>
+                            </div>
+                            <div class="poc-meta-item">
+                                <span class="poc-meta-label">MATURITY</span>
+                                <span id="poc-maturity" class="poc-maturity-badge">—</span>
+                            </div>
+                        </div>
+
+                        <div id="poc-repos-container" class="poc-repos-container">
+                            <div class="poc-repos-loading" id="poc-repos-loading">
+                                <div class="skeleton-block"
+                                    style="height: 80px; border-radius: 10px; margin-bottom: 12px;"></div>
+                                <div class="skeleton-block"
+                                    style="height: 80px; border-radius: 10px; margin-bottom: 12px;"></div>
+                                <div class="skeleton-block" style="height: 80px; border-radius: 10px;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Code Editor + AI Analysis workspace -->
+                    <div id="poc-load-banner-container"></div>
+                    <div class="poc-workspace">
+                        <!-- LEFT: Code Editor -->
+                        <div class="poc-editor-panel glass-panel-solid">
+                            <div class="poc-editor-header">
+                                <div class="poc-editor-title-row">
+                                    <span class="material-symbols-outlined"
+                                        style="font-size: 16px; color: var(--primary);">code</span>
+                                    <span class="poc-editor-label">Exploit Analysis</span>
+                                    <span id="poc-filename-badge" class="poc-filename-badge"
+                                        style="display:none;"></span>
+                                </div>
+                                <div class="poc-editor-actions">
+                                    <button id="poc-clear-btn" class="poc-icon-btn" title="Clear editor">
+                                        <span class="material-symbols-outlined">delete</span>
+                                    </button>
+                                    <button id="poc-copy-btn" class="poc-icon-btn" title="Copy code">
+                                        <span class="material-symbols-outlined">content_copy</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="poc-editor-body">
+                                <div class="poc-line-numbers" id="poc-line-numbers">
+                                    <span>1</span>
+                                </div>
+                                <textarea id="poc-code-input" class="poc-code-textarea"
+                                    placeholder="# Paste exploit code here, or load from a discovered PoC above&#10;&#10;import requests&#10;&#10;def exploit(url):&#10;    ..."
+                                    spellcheck="false" autocomplete="off" autocorrect="off"
+                                    autocapitalize="off"></textarea>
+                            </div>
+
+                            <div class="poc-editor-footer">
+                                <span id="poc-lang-detect" class="poc-lang-badge">Auto-detect</span>
+                                <button id="poc-analyze-btn" class="btn btn-primary poc-analyze-btn">
+                                    <span class="material-symbols-outlined" style="font-size: 16px;">psychology</span>
+                                    Analyze with AI
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT: AI Explanation -->
+                        <div id="poc-ai-panel" class="poc-ai-panel glass-panel-solid">
+                            <div class="poc-ai-header">
+                                <span class="material-symbols-outlined"
+                                    style="color: var(--primary); font-size: 18px;">tips_and_updates</span>
+                                <span class="poc-ai-title">AI Explanation</span>
+                            </div>
+                            <div id="poc-ai-content" class="poc-ai-content">
+                                <div class="poc-ai-placeholder">
+                                    <span class="material-symbols-outlined"
+                                        style="font-size: 48px; color: var(--text-muted); display: block; margin-bottom: 16px;">psychology</span>
+                                    <p
+                                        style="color: var(--text-muted); font-size: 14px; line-height: 1.7; text-align: center;">
+                                        Paste or load exploit code,<br>then click <strong
+                                            style="color: var(--text-secondary);">Analyze with AI</strong> to get
+                                        a<br>structured breakdown.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Attack Path Visualization -->
+                    <div id="poc-attack-path-section" class="poc-attack-path-section glass-panel-solid"
+                        style="display: none;">
+                        <div class="poc-attack-path-header">
+                            <span class="material-symbols-outlined" style="color: var(--primary);">account_tree</span>
+                            <h3>Attack Path</h3>
+                        </div>
+                        <div id="poc-attack-path-nodes" class="poc-attack-path-nodes"></div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- News Tab Content -->
+            <div id="tab-content-news" class="tab-content"
+                style="flex: 1; display: none; flex-direction: column; overflow: hidden;">
+                <div id="news-content" style="flex: 1; overflow-y: auto; padding: 24px;">
+                    <div class="skeleton-section">
+                        <div class="sk-header-row">
+                            <span class="skeleton-block sk-icon"></span>
+                            <span class="skeleton-block sk-title" style="margin-bottom:0; width:40%;"></span>
+                        </div>
+                        <div class="skeleton-block sk-line sk-line-full"></div>
+                        <div class="skeleton-block sk-line sk-line-90"></div>
+                        <div class="skeleton-block sk-line sk-line-75"></div>
+                    </div>
+                    <div class="skeleton-section">
+                        <div class="skeleton-block sk-card"
+                            style="height:80px; border-radius:10px; margin-bottom:12px;"></div>
+                        <div class="skeleton-block sk-card"
+                            style="height:80px; border-radius:10px; margin-bottom:12px;"></div>
+                        <div class="skeleton-block sk-card" style="height:80px; border-radius:10px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MITRE ATT&CK Tab Content -->
+            <div id="tab-content-mitre" class="tab-content"
+                style="flex: 1; display: none; flex-direction: column; overflow: hidden;">
+                <div id="mitre-content" style="flex: 1; overflow-y: auto; padding: 24px;">
+                    <!-- skeleton: header + 4 technique cards -->
+                    <div style="margin-bottom: 20px;">
+                        <div class="skeleton-block sk-line"
+                            style="height:20px; width:200px; margin-bottom:8px; border-radius:8px;"></div>
+                        <div class="skeleton-block sk-line sk-line-40" style="height:11px;"></div>
+                    </div>
+                    <div class="sk-technique">
+                        <div class="sk-header-row" style="margin-bottom:8px;">
+                            <div class="skeleton-block sk-pill" style="width:60px; height:20px; margin-right:10px;">
+                            </div>
+                            <div class="skeleton-block sk-line" style="height:14px; width:200px; margin-bottom:0;">
+                            </div>
+                        </div>
+                        <div class="skeleton-block sk-line sk-line-full"></div>
+                        <div class="skeleton-block sk-line sk-line-75"></div>
+                        <div class="sk-pill-row">
+                            <div class="skeleton-block sk-pill" style="height:20px; width:70px;"></div>
+                            <div class="skeleton-block sk-pill" style="height:20px; width:80px;"></div>
+                        </div>
+                    </div>
+                    <div class="sk-technique">
+                        <div class="sk-header-row" style="margin-bottom:8px;">
+                            <div class="skeleton-block sk-pill" style="width:60px; height:20px; margin-right:10px;">
+                            </div>
+                            <div class="skeleton-block sk-line" style="height:14px; width:160px; margin-bottom:0;">
+                            </div>
+                        </div>
+                        <div class="skeleton-block sk-line sk-line-90"></div>
+                        <div class="skeleton-block sk-line sk-line-60"></div>
+                        <div class="sk-pill-row">
+                            <div class="skeleton-block sk-pill" style="height:20px; width:75px;"></div>
+                        </div>
+                    </div>
+                    <div class="sk-technique">
+                        <div class="sk-header-row" style="margin-bottom:8px;">
+                            <div class="skeleton-block sk-pill" style="width:60px; height:20px; margin-right:10px;">
+                            </div>
+                            <div class="skeleton-block sk-line" style="height:14px; width:180px; margin-bottom:0;">
+                            </div>
+                        </div>
+                        <div class="skeleton-block sk-line sk-line-full"></div>
+                        <div class="skeleton-block sk-line sk-line-75"></div>
+                        <div class="sk-pill-row">
+                            <div class="skeleton-block sk-pill" style="height:20px; width:65px;"></div>
+                            <div class="skeleton-block sk-pill" style="height:20px; width:85px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="app.js?v=5"></script>
+    <script>
+        // Initialize particles.js
+        particlesJS('particles-js', {
+            particles: {
+                number: {
+                    value: 60,
+                    density: { enable: true, value_area: 900 }
+                },
+                color: { value: '#00ddff' },
+                shape: { type: 'circle' },
+                opacity: {
+                    value: 0.25,
+                    random: true,
+                    animation: { enable: true, speed: 0.8, minimumValue: 0.1, sync: false }
+                },
+                size: {
+                    value: 2.5,
+                    random: true,
+                    animation: { enable: true, speed: 1.5, minimumValue: 0.5, sync: false }
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 120,
+                    color: '#00ddff',
+                    opacity: 0.12,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 0.8,
+                    direction: 'none',
+                    random: true,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: { enable: true, mode: 'grab' },
+                    onclick: { enable: true, mode: 'push' },
+                    resize: true
+                },
+                modes: {
+                    grab: { distance: 120, line_linked: { opacity: 0.3 } },
+                    push: { particles_nb: 3 }
+                }
+            },
+            retina_detect: true
+        });
+    </script>
+</body>
+
+</html>

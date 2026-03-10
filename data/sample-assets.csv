@@ -1,0 +1,101 @@
+Asset ID,Product Name,Vendor,Version,Environment,Owner
+ASSET-001,Log4j,Apache,2.14.1,Production,Platform Team
+ASSET-002,Log4j,Apache,2.15.0,Staging,Platform Team
+ASSET-003,Struts 2,Apache,2.5.10,Production,Backend Team
+ASSET-004,HTTP Server,Apache,2.4.49,Production,Infrastructure
+ASSET-005,Tomcat,Apache,9.0.50,Production,DevOps
+ASSET-006,Tomcat,Apache,8.5.60,Staging,DevOps
+ASSET-007,Solr,Apache,8.11.0,Production,Search Team
+ASSET-008,Hadoop,Apache,3.2.0,Production,Data Team
+ASSET-009,Kafka,Apache,2.8.0,Production,Data Team
+ASSET-010,Zookeeper,Apache,3.5.9,Production,Data Team
+ASSET-011,WordPress,Automattic,5.8.0,Production,Web Team
+ASSET-012,WordPress,Automattic,5.6.0,Production,Marketing
+ASSET-013,WordPress,Automattic,4.9.0,Production,Content Team
+ASSET-014,Joomla,Open Source Matters,3.10.0,Production,Web Team
+ASSET-015,Drupal,Drupal Association,9.2.0,Production,CMS Team
+ASSET-016,Drupal,Drupal Association,8.9.0,Production,CMS Team
+ASSET-017,OpenSSL,OpenSSL Foundation,1.0.2,Production,Security Team
+ASSET-018,OpenSSL,OpenSSL Foundation,1.1.1,Production,Platform Team
+ASSET-019,OpenSSL,OpenSSL Foundation,3.0.0,Staging,Platform Team
+ASSET-020,VMware ESXi,VMware,7.0.0,Production,Infrastructure
+ASSET-021,VMware ESXi,VMware,6.7.0,Production,Infrastructure
+ASSET-022,VMware vCenter,VMware,7.0.0,Production,Infrastructure
+ASSET-023,VMware Horizon,VMware,8.2.0,Production,VDI Team
+ASSET-024,Exchange Server,Microsoft,15.1.2375,Production,IT Operations
+ASSET-025,Exchange Server,Microsoft,15.0.1497,Production,IT Operations
+ASSET-026,SharePoint Server,Microsoft,16.0.10368,Production,Collaboration
+ASSET-027,Windows Server,Microsoft,2019 1809,Production,Infrastructure
+ASSET-028,Windows Server,Microsoft,2016 1607,Production,Infrastructure
+ASSET-029,Windows Server,Microsoft,2012 R2,Production,Legacy Systems
+ASSET-030,IIS,Microsoft,10.0,Production,Web Team
+ASSET-031,SQL Server,Microsoft,2019 15.0,Production,DBA Team
+ASSET-032,SQL Server,Microsoft,2017 14.0,Production,DBA Team
+ASSET-033,Active Directory,Microsoft,2019,Production,IT Operations
+ASSET-034,Cisco IOS,Cisco,15.2,Production,Network Team
+ASSET-035,Cisco IOS XE,Cisco,16.12,Production,Network Team
+ASSET-036,Cisco ASA,Cisco,9.14,Production,Network Team
+ASSET-037,Cisco FTD,Cisco,6.6.0,Production,Security Team
+ASSET-038,WebLogic Server,Oracle,12.2.1.4,Production,Middleware Team
+ASSET-039,WebLogic Server,Oracle,14.1.1.0,Staging,Middleware Team
+ASSET-040,Oracle Database,Oracle,19c,Production,DBA Team
+ASSET-041,Oracle Database,Oracle,12.2.0,Production,DBA Team
+ASSET-042,WebSphere Application Server,IBM,9.0.5,Production,Middleware Team
+ASSET-043,WebSphere Application Server,IBM,8.5.5,Production,Legacy Systems
+ASSET-044,JBoss EAP,Red Hat,7.4.0,Production,Middleware Team
+ASSET-045,Spring Framework,VMware,5.3.10,Production,Backend Team
+ASSET-046,Spring Boot,VMware,2.6.0,Production,Backend Team
+ASSET-047,Spring Boot,VMware,2.7.0,Staging,Backend Team
+ASSET-048,nginx,F5,1.18.0,Production,Web Team
+ASSET-049,nginx,F5,1.20.0,Production,Web Team
+ASSET-050,PHP,PHP Group,7.4.0,Production,Web Team
+ASSET-051,PHP,PHP Group,8.0.0,Production,Web Team
+ASSET-052,PHP,PHP Group,7.3.0,Production,Legacy Systems
+ASSET-053,Jenkins,Jenkins,2.303,Production,CI/CD Team
+ASSET-054,Jenkins,Jenkins,2.289,Production,CI/CD Team
+ASSET-055,GitLab CE,GitLab,14.0.0,Production,DevOps
+ASSET-056,GitLab CE,GitLab,13.11.0,Production,DevOps
+ASSET-057,Confluence,Atlassian,7.12.0,Production,Collaboration
+ASSET-058,Jira,Atlassian,8.20.0,Production,Project Management
+ASSET-059,Bitbucket,Atlassian,7.17.0,Production,DevOps
+ASSET-060,FortiGate,Fortinet,6.4.5,Production,Network Team
+ASSET-061,FortiGate,Fortinet,7.0.0,Production,Network Team
+ASSET-062,Palo Alto PAN-OS,Palo Alto Networks,10.1.0,Production,Security Team
+ASSET-063,Pulse Connect Secure,Ivanti,9.1.0,Production,VPN Team
+ASSET-064,SolarWinds Orion,SolarWinds,2020.2,Production,Monitoring Team
+ASSET-065,Ruby on Rails,Rails Core Team,6.1.4,Production,Backend Team
+ASSET-066,Ruby on Rails,Rails Core Team,5.2.6,Production,Legacy Systems
+ASSET-067,Node.js,OpenJS Foundation,14.17,Production,Backend Team
+ASSET-068,Node.js,OpenJS Foundation,16.13,Staging,Backend Team
+ASSET-069,Python,PSF,3.9.0,Production,Data Team
+ASSET-070,Django,Django Software Foundation,3.2.0,Production,Backend Team
+ASSET-071,Flask,Pallets,2.0.0,Development,Backend Team
+ASSET-072,Kubernetes,CNCF,1.21.0,Production,Platform Team
+ASSET-073,Kubernetes,CNCF,1.22.0,Staging,Platform Team
+ASSET-074,Docker Engine,Docker,20.10.0,Production,Platform Team
+ASSET-075,containerd,CNCF,1.5.0,Production,Platform Team
+ASSET-076,Redis,Redis Ltd,6.2.0,Production,Backend Team
+ASSET-077,Redis,Redis Ltd,7.0.0,Staging,Backend Team
+ASSET-078,MongoDB,MongoDB Inc,4.4.0,Production,DBA Team
+ASSET-079,MongoDB,MongoDB Inc,5.0.0,Production,DBA Team
+ASSET-080,Elasticsearch,Elastic,7.15.0,Production,Search Team
+ASSET-081,Grafana,Grafana Labs,8.2.0,Production,Monitoring Team
+ASSET-082,Grafana,Grafana Labs,7.5.0,Production,Monitoring Team
+ASSET-083,Prometheus,CNCF,2.30.0,Production,Monitoring Team
+ASSET-084,GitLab Runner,GitLab,14.2.0,Production,CI/CD Team
+ASSET-085,HashiCorp Vault,HashiCorp,1.7.0,Production,Security Team
+ASSET-086,Terraform,HashiCorp,1.0.0,Production,DevOps
+ASSET-087,Ansible,Red Hat,2.11.0,Production,Automation Team
+ASSET-088,SonarQube,SonarSource,8.9.0,Production,Security Team
+ASSET-089,Nexus Repository,Sonatype,3.35.0,Production,DevOps
+ASSET-090,Artifactory,JFrog,7.30.0,Production,DevOps
+ASSET-091,Keycloak,Red Hat,15.0.0,Production,Identity Team
+ASSET-092,OpenVPN,OpenVPN Inc,2.5.0,Production,VPN Team
+ASSET-093,ProFTPd,ProFTPd,1.3.7,Production,File Transfer Team
+ASSET-094,Samba,Samba Team,4.14.0,Production,File Services
+ASSET-095,Nagios XI,Nagios Enterprises,5.8.0,Production,Monitoring Team
+ASSET-096,ManageEngine ServiceDesk,Zoho,11.2,Production,ITSM Team
+ASSET-097,Zimbra Collaboration,Synacor,8.8.15,Production,Email Team
+ASSET-098,Citrix ADC,Citrix,13.1,Production,Network Team
+ASSET-099,F5 BIG-IP,F5 Networks,16.1.0,Production,Network Team
+ASSET-100,Sophos UTM,Sophos,9.705,Production,Security Team

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CVE Analyzer - Dashboard</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00ddff",
+                        "primary-hover": "#66eaff",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0f2023",
+                        "card-dark": "#162a2e",
+                        "cyber-dark": "#0a1314",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "linear-gradient(to right, #1f2f33 1px, transparent 1px), linear-gradient(to bottom, #1f2f33 1px, transparent 1px)",
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(15, 32, 35, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .cyber-grid {
+            background-size: 40px 40px;
+            mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+        }::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f2023;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27383a;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #395256;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 font-display min-h-screen flex flex-col overflow-x-hidden selection:bg-primary/30 selection:text-white">
+<div class="fixed inset-0 z-0 pointer-events-none">
+<div class="absolute inset-0 bg-grid-pattern opacity-[0.07] cyber-grid"></div>
+<div class="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] mix-blend-screen"></div>
+<div class="absolute bottom-[-10%] right-[10%] w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[120px] mix-blend-screen"></div>
+</div>
+<header class="relative z-50 glass-panel border-b-0 border-b-white/5 sticky top-0">
+<div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center text-background-dark shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[20px] font-bold">shield_lock</span>
+</div>
+<h1 class="text-white text-lg font-bold tracking-tight">CVE Analyzer</h1>
+</div>
+</div>
+</header>
+<main class="relative z-10 flex-grow flex flex-col items-center pt-12 pb-24 px-4 sm:px-6">
+<div class="w-full max-w-4xl flex flex-col items-center text-center mb-16 space-y-6">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium tracking-wide uppercase mb-2">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+                Local AI Engine Active
+            </div>
+<h2 class="text-4xl md:text-6xl font-black text-white leading-tight tracking-tight">
+                Analyze Vulnerabilities <br/>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">with Precision</span>
+</h2>
+<p class="text-slate-400 text-lg max-w-2xl font-light">
+                Leverage local LLMs to instantly analyze CVE descriptions, assess impact, and generate Sigma detection rules without data leaving your network.
+            </p>
+<div class="w-full max-w-3xl mt-8">
+<div class="glass-panel p-2 rounded-2xl shadow-2xl shadow-black/50 flex flex-col md:flex-row gap-2 transition-all focus-within:ring-2 focus-within:ring-primary/50 focus-within:border-primary/50">
+<div class="relative min-w-[180px] group border-b md:border-b-0 md:border-r border-white/10">
+<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-primary">
+<span class="material-symbols-outlined">smart_toy</span>
+</div>
+<select class="w-full bg-transparent border-none text-white text-sm focus:ring-0 pl-10 pr-8 py-4 cursor-pointer appearance-none hover:bg-white/5 rounded-xl transition-colors">
+<option class="bg-card-dark text-white">Mistral-Sec-7B</option>
+<option class="bg-card-dark text-white">Llama-3-Cyber</option>
+<option class="bg-card-dark text-white">Falcon-180B</option>
+</select>
+<div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-500">
+<span class="material-symbols-outlined text-sm">expand_more</span>
+</div>
+</div>
+<div class="flex-1 relative">
+<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-500">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="w-full h-full bg-transparent border-none text-white placeholder:text-slate-500 focus:ring-0 pl-10 text-base font-mono py-4" placeholder="Enter CVE ID (e.g., CVE-2024-3094)" type="text"/>
+</div>
+<button class="bg-primary hover:bg-primary-hover text-background-dark font-bold text-sm px-8 py-3 rounded-xl transition-all shadow-[0_0_20px_rgba(0,221,255,0.3)] hover:shadow-[0_0_30px_rgba(0,221,255,0.5)] flex items-center justify-center gap-2 whitespace-nowrap">
+<span class="material-symbols-outlined">bolt</span>
+                        Analyze
+                    </button>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-5xl mb-12">
+<div class="glass-panel rounded-xl p-5 flex items-center gap-4 hover:bg-white/5 transition-colors group">
+<div class="size-12 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:text-blue-300 group-hover:scale-110 transition-all">
+<span class="material-symbols-outlined">data_usage</span>
+</div>
+<div>
+<p class="text-slate-400 text-xs uppercase font-semibold tracking-wider">Total Analyses</p>
+<p class="text-2xl font-bold text-white font-mono">1,248</p>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-5 flex items-center gap-4 hover:bg-white/5 transition-colors group">
+<div class="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:text-cyan-200 group-hover:scale-110 transition-all">
+<span class="material-symbols-outlined">rule</span>
+</div>
+<div>
+<p class="text-slate-400 text-xs uppercase font-semibold tracking-wider">Rules Generated</p>
+<p class="text-2xl font-bold text-white font-mono">856</p>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-5 flex items-center gap-4 hover:bg-white/5 transition-colors group">
+<div class="size-12 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400 group-hover:text-purple-300 group-hover:scale-110 transition-all">
+<span class="material-symbols-outlined">memory</span>
+</div>
+<div>
+<p class="text-slate-400 text-xs uppercase font-semibold tracking-wider">Active Models</p>
+<p class="text-2xl font-bold text-white font-mono">3 <span class="text-sm font-sans font-normal text-slate-500">/ 5</span></p>
+</div>
+</div>
+</div>
+<div class="w-full max-w-5xl">
+<div class="flex items-center justify-between mb-6 px-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">history</span>
+<h3 class="text-xl font-bold text-white">Recent Analyses</h3>
+</div>
+<div class="flex gap-2">
+<button class="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+<span class="material-symbols-outlined">grid_view</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="glass-panel rounded-xl p-5 hover:border-primary/40 transition-all hover:shadow-lg hover:shadow-primary/5 group cursor-pointer relative overflow-hidden">
+<div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-red-500/10 to-transparent pointer-events-none"></div>
+<div class="flex justify-between items-start mb-4">
+<div class="bg-white/5 px-3 py-1 rounded text-sm font-mono text-white border border-white/10 group-hover:border-primary/30 transition-colors">
+                            CVE-2024-3094
+                        </div>
+<span class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-red-400 bg-red-400/10 px-2 py-1 rounded border border-red-400/20">
+                            Critical
+                        </span>
+</div>
+<h4 class="text-white font-medium mb-2 line-clamp-1" title="XZ Utils Malicious Backdoor">XZ Utils Malicious Backdoor</h4>
+<p class="text-slate-400 text-sm mb-6 line-clamp-2 h-10">
+                        Malicious code injected into upstream tarballs of XZ Utils starting with version 5.6.0.
+                    </p>
+<div class="flex items-center justify-between pt-4 border-t border-white/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-green-400 text-lg">check_circle</span>
+<span class="text-xs text-slate-300">Rule Ready</span>
+</div>
+<span class="text-xs text-slate-500 font-mono">2m ago</span>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-5 hover:border-primary/40 transition-all hover:shadow-lg hover:shadow-primary/5 group cursor-pointer relative overflow-hidden">
+<div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-orange-500/10 to-transparent pointer-events-none"></div>
+<div class="flex justify-between items-start mb-4">
+<div class="bg-white/5 px-3 py-1 rounded text-sm font-mono text-white border border-white/10 group-hover:border-primary/30 transition-colors">
+                            CVE-2023-4863
+                        </div>
+<span class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-orange-400 bg-orange-400/10 px-2 py-1 rounded border border-orange-400/20">
+                            High
+                        </span>
+</div>
+<h4 class="text-white font-medium mb-2 line-clamp-1">Heap Buffer Overflow in WebP</h4>
+<p class="text-slate-400 text-sm mb-6 line-clamp-2 h-10">
+                        Heap buffer overflow in libwebp in Google Chrome prior to 116.0.5845.187.
+                    </p>
+<div class="flex items-center justify-between pt-4 border-t border-white/5">
+<div class="flex items-center gap-2">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+</span>
+<span class="text-xs text-primary animate-pulse">Processing...</span>
+</div>
+<span class="text-xs text-slate-500 font-mono">15m ago</span>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-5 hover:border-primary/40 transition-all hover:shadow-lg hover:shadow-primary/5 group cursor-pointer relative overflow-hidden">
+<div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-yellow-500/10 to-transparent pointer-events-none"></div>
+<div class="flex justify-between items-start mb-4">
+<div class="bg-white/5 px-3 py-1 rounded text-sm font-mono text-white border border-white/10 group-hover:border-primary/30 transition-colors">
+                            CVE-2024-21413
+                        </div>
+<span class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-red-400 bg-red-400/10 px-2 py-1 rounded border border-red-400/20">
+                            Critical
+                        </span>
+</div>
+<h4 class="text-white font-medium mb-2 line-clamp-1">Outlook RCE Vulnerability</h4>
+<p class="text-slate-400 text-sm mb-6 line-clamp-2 h-10">
+                        Microsoft Outlook Remote Code Execution Vulnerability allowing attackers to bypass protections.
+                    </p>
+<div class="flex items-center justify-between pt-4 border-t border-white/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-500 text-lg">edit_note</span>
+<span class="text-xs text-slate-300">Draft</span>
+</div>
+<span class="text-xs text-slate-500 font-mono">1h ago</span>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-5 hover:border-primary/40 transition-all hover:shadow-lg hover:shadow-primary/5 group cursor-pointer relative overflow-hidden">
+<div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-yellow-500/10 to-transparent pointer-events-none"></div>
+<div class="flex justify-between items-start mb-4">
+<div class="bg-white/5 px-3 py-1 rounded text-sm font-mono text-white border border-white/10 group-hover:border-primary/30 transition-colors">
+                            CVE-2024-0012
+                        </div>
+<span class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-yellow-400 bg-yellow-400/10 px-2 py-1 rounded border border-yellow-400/20">
+                            Medium
+                        </span>
+</div>
+<h4 class="text-white font-medium mb-2 line-clamp-1">Palo Alto Networks PAN-OS</h4>
+<p class="text-slate-400 text-sm mb-6 line-clamp-2 h-10">
+                        Reflected Cross-Site Scripting (XSS) vulnerability in the GlobalProtect portal.
+                    </p>
+<div class="flex items-center justify-between pt-4 border-t border-white/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-green-400 text-lg">check_circle</span>
+<span class="text-xs text-slate-300">Rule Ready</span>
+</div>
+<span class="text-xs text-slate-500 font-mono">4h ago</span>
+</div>
+</div>
+</div>
+<div class="mt-8 text-center">
+<a class="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-primary transition-colors border-b border-transparent hover:border-primary pb-1" href="#">
+                    View Full Analysis History
+                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+</main>
+<div class="fixed bottom-8 right-8 z-50">
+<button class="bg-primary hover:bg-primary-hover text-background-dark p-4 rounded-full shadow-[0_4px_20px_rgba(0,221,255,0.4)] hover:shadow-[0_6px_25px_rgba(0,221,255,0.6)] hover:-translate-y-1 transition-all flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</div>
+</body></html>

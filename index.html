@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cveResponderAI - Dashboard</title>
+    <meta name="description" content="Analyze CVE vulnerabilities with local LLMs.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Background Effects -->
+    <div id="particles-js"></div>
+    <div class="ambient-glow"></div>
+
+    <!-- Header -->
+    <header class="header glass-panel"
+        style="border-radius: 0; border-top: none; border-left: none; border-right: none;">
+        <a href="index.html" class="logo">
+            <div class="logo-icon">
+                <span class="material-symbols-outlined" style="font-size: 20px;">emergency</span>
+            </div>
+            <span class="logo-text">cveResponderAI</span>
+        </a>
+
+        <div class="flex items-center gap-3">
+            <a href="inventory.html" class="btn-ghost"
+                style="padding: 6px 12px; border-radius: 8px; font-size: 13px; display:flex; align-items:center; gap:6px; text-decoration:none; color:var(--text-secondary);">
+                <span class="material-symbols-outlined" style="font-size:18px;">inventory_2</span>
+                Inventory
+            </a>
+            <!-- Theme Toggle Button -->
+            <button id="theme-toggle" class="btn-ghost" style="padding: 8px; border-radius: 8px;" title="Toggle theme">
+                <span class="material-symbols-outlined" id="theme-icon">light_mode</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10">
+        <!-- Hero Section -->
+        <section class="hero">
+            <!-- Status Badge -->
+            <div class="hero-badge">
+                <span class="pulse-indicator">
+                    <span class="ring"></span>
+                    <span class="dot"></span>
+                </span>
+                Local AI Engine Active
+            </div>
+
+            <!-- Title -->
+            <h1 class="hero-title">
+                Analyze Vulnerabilities<br>
+                <span class="text-gradient">with Precision</span>
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="hero-subtitle">
+                Leverage local LLMs to instantly analyze CVE descriptions and assess impact without data leaving your
+                network.
+            </p>
+
+            <!-- Search Box -->
+            <form id="cve-search-form" class="search-box glass-panel">
+                <div class="model-display" id="model-selector-toggle">
+                    <span class="material-symbols-outlined">smart_toy</span>
+                    <span id="current-model-name">Loading...</span>
+                    <span class="material-symbols-outlined"
+                        style="font-size: 16px; margin-left: 4px;">expand_more</span>
+                </div>
+
+                <!-- Model Dropdown -->
+                <div id="model-dropdown" class="model-dropdown" style="display: none;">
+                    <!-- Filled dynamically by app.js -->
+                </div>
+                <div class="search-input-wrapper">
+                    <span class="material-symbols-outlined">search</span>
+                    <input type="text" id="cve-input" class="input" placeholder="Enter CVE ID (e.g., CVE-2024-3094)"
+                        required autocomplete="off">
+                </div>
+                <p id="cve-format-error" class="cve-format-error"
+                    style="display:none; color:#f87171; font-size:12px; margin:6px 0 0 4px; width:100%;"></p>
+                <button type="submit" class="btn btn-primary">
+                    <span class="material-symbols-outlined">bolt</span>
+                    Analyze
+                </button>
+            </form>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="container" style="margin-top: -32px;">
+            <div class="flex gap-4" style="flex-wrap: wrap;">
+                <div class="glass-panel stat-card" style="flex: 1; min-width: 200px;">
+                    <div class="icon-wrapper" style="background: rgba(59, 130, 246, 0.1); color: #60a5fa;">
+                        <span class="material-symbols-outlined">data_usage</span>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-wider font-semibold" style="color: var(--text-muted);">
+                            Total Analyses</p>
+                        <p class="text-2xl font-bold font-mono" id="stat-total-analyses"
+                            style="color: var(--text-primary);">—</p>
+                    </div>
+                </div>
+
+                <div class="glass-panel stat-card inventory-stat-card" id="inventory-stat-card"
+                    style="flex: 1; min-width: 200px; cursor: pointer;" title="Manage Asset Inventory">
+                    <div class="icon-wrapper" style="background: rgba(0, 221, 255, 0.1); color: var(--primary);">
+                        <span class="material-symbols-outlined">inventory_2</span>
+                    </div>
+                    <div style="flex:1;">
+                        <p class="text-xs uppercase tracking-wider font-semibold" style="color: var(--text-muted);">
+                            Managed Assets</p>
+                        <p class="text-2xl font-bold font-mono" id="inventory-count"
+                            style="color: var(--text-primary);">0</p>
+                        <p id="inventory-cta" class="inventory-cta-hint" style="display:none;">No Assets — Click to
+                            Initialize</p>
+                    </div>
+                    <span class="material-symbols-outlined inventory-card-arrow">arrow_forward</span>
+                </div>
+
+                <div class="glass-panel stat-card" style="flex: 1; min-width: 200px;">
+                    <div class="icon-wrapper" style="background: rgba(168, 85, 247, 0.1); color: #a855f7;">
+                        <span class="material-symbols-outlined">memory</span>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-wider font-semibold" style="color: var(--text-muted);">
+                            Active Models</p>
+                        <p class="text-2xl font-bold font-mono" style="color: var(--text-primary);">
+                            <span id="stat-active-models">—</span><span id="stat-total-models"
+                                style="font-size: 14px; font-family: var(--font-display); font-weight: 400; color: var(--text-muted);"></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Analyses Section -->
+        <section class="container" style="margin-top: 48px; padding-bottom: 96px;">
+            <div class="flex items-center gap-2" style="margin-bottom: 24px;">
+                <span class="material-symbols-outlined" style="color: var(--primary);">history</span>
+                <h2 class="text-xl font-bold" style="color: var(--text-primary);">Recent Analyses</h2>
+            </div>
+
+            <!-- CVE Cards Grid -->
+            <div id="recent-analyses-grid" class="cve-grid"
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
+                <!-- Cards will be dynamically injected here by app.js -->
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Floating Action Button -->
+    <button class="btn btn-primary fixed"
+        style="bottom: 32px; right: 32px; width: 56px; height: 56px; padding: 0; border-radius: 50%;" id="fab">
+        <span class="material-symbols-outlined" style="font-size: 28px;">add</span>
+    </button>
+
+    <!-- ============================================================
+         INVENTORY MODAL
+    ============================================================ -->
+    <div id="inventory-modal-overlay" class="inv-overlay" aria-hidden="true">
+        <div class="inv-modal glass-panel-solid" role="dialog" aria-modal="true" aria-labelledby="inv-modal-title">
+
+            <!-- Modal Header -->
+            <div class="inv-modal-header">
+                <div class="inv-modal-title-row">
+                    <div class="inv-modal-icon">
+                        <span class="material-symbols-outlined">inventory_2</span>
+                    </div>
+                    <div>
+                        <h2 id="inv-modal-title" class="inv-modal-title">Asset Inventory</h2>
+                        <p class="inv-modal-subtitle">Initialize your asset base for vulnerability tracking</p>
+                    </div>
+                </div>
+                <button id="inv-modal-close" class="inv-close-btn" aria-label="Close">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <!-- Tab Switcher -->
+            <div class="inv-tabs">
+                <button class="inv-tab active" data-inv-tab="import">
+                    <span class="material-symbols-outlined">upload_file</span>
+                    Bulk Import CSV
+                </button>
+                <button class="inv-tab" data-inv-tab="manual">
+                    <span class="material-symbols-outlined">edit_note</span>
+                    Manual Entry
+                </button>
+                <button class="inv-tab" data-inv-tab="sample">
+                    <span class="material-symbols-outlined">science</span>
+                    Load Sample Data
+                </button>
+            </div>
+
+            <!-- Tab Content: Bulk Import -->
+            <div id="inv-tab-import" class="inv-tab-content active">
+                <div class="inv-upload-zone" id="inv-drop-zone">
+                    <span class="material-symbols-outlined inv-upload-icon">cloud_upload</span>
+                    <p class="inv-upload-title">Drop your CSV file here</p>
+                    <p class="inv-upload-sub">or <label for="inv-file-input" class="inv-file-label">browse files</label>
+                    </p>
+                    <input type="file" id="inv-file-input" accept=".csv" style="display:none;">
+                    <div class="inv-upload-schema">
+                        <span class="inv-schema-label">Expected columns:</span>
+                        <code>Asset ID, Product Name, Vendor, Version, Environment, Owner</code>
+                    </div>
+                </div>
+                <div id="inv-csv-preview" class="inv-csv-preview" style="display:none;"></div>
+                <div class="inv-import-actions" style="display:none;" id="inv-import-actions">
+                    <button id="inv-confirm-import" class="btn btn-primary">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        <span id="inv-import-count">Import 0 Assets</span>
+                    </button>
+                    <button id="inv-cancel-import" class="btn-ghost inv-btn-ghost">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Tab Content: Manual Entry -->
+            <div id="inv-tab-manual" class="inv-tab-content" style="display:none;">
+                <form id="inv-manual-form" class="inv-form" autocomplete="off">
+                    <div class="inv-form-grid">
+                        <div class="inv-field">
+                            <label class="inv-label">Asset ID <span class="inv-required">*</span></label>
+                            <input type="text" id="inv-f-id" class="inv-input" placeholder="e.g. ASSET-001" required>
+                        </div>
+                        <div class="inv-field">
+                            <label class="inv-label">Product Name <span class="inv-required">*</span></label>
+                            <input type="text" id="inv-f-product" class="inv-input" placeholder="e.g. Apache Log4j"
+                                required>
+                        </div>
+                        <div class="inv-field">
+                            <label class="inv-label">Vendor <span class="inv-required">*</span></label>
+                            <input type="text" id="inv-f-vendor" class="inv-input" placeholder="e.g. Apache" required>
+                        </div>
+                        <div class="inv-field">
+                            <label class="inv-label">Version <span class="inv-required">*</span></label>
+                            <input type="text" id="inv-f-version" class="inv-input" placeholder="e.g. 2.14.1" required>
+                        </div>
+                        <div class="inv-field">
+                            <label class="inv-label">Environment</label>
+                            <select id="inv-f-env" class="inv-input inv-select">
+                                <option value="Production">Production</option>
+                                <option value="Staging">Staging</option>
+                                <option value="Development">Development</option>
+                                <option value="DR">DR / Backup</option>
+                                <option value="Cloud">Cloud</option>
+                                <option value="On-Premise">On-Premise</option>
+                            </select>
+                        </div>
+                        <div class="inv-field">
+                            <label class="inv-label">Owner</label>
+                            <input type="text" id="inv-f-owner" class="inv-input" placeholder="e.g. Platform Team">
+                        </div>
+                    </div>
+                    <div class="inv-form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <span class="material-symbols-outlined">add_circle</span>
+                            Add Asset
+                        </button>
+                        <a href="inventory.html" class="btn-ghost inv-btn-ghost inv-view-all">
+                            <span class="material-symbols-outlined">table_view</span>
+                            View Full Inventory
+                        </a>
+                    </div>
+                </form>
+                <div id="inv-manual-success" class="inv-success-toast" style="display:none;"></div>
+            </div>
+
+            <!-- Tab Content: Sample Data -->
+            <div id="inv-tab-sample" class="inv-tab-content" style="display:none;">
+                <div class="inv-sample-info">
+                    <div class="inv-sample-icon">
+                        <span class="material-symbols-outlined">science</span>
+                    </div>
+                    <h3>100 High-Risk Sample Assets</h3>
+                    <p>Load a curated set of 100 commonly exploited products and versions — perfect for testing your
+                        vulnerability analysis workflow.</p>
+                    <div class="inv-sample-badges">
+                        <span class="inv-sample-badge">Apache</span>
+                        <span class="inv-sample-badge">Windows Server</span>
+                        <span class="inv-sample-badge">VMware</span>
+                        <span class="inv-sample-badge">Cisco</span>
+                        <span class="inv-sample-badge">Oracle</span>
+                        <span class="inv-sample-badge">Spring</span>
+                        <span class="inv-sample-badge">+more</span>
+                    </div>
+                </div>
+                <div class="inv-sample-actions">
+                    <button id="inv-load-sample" class="btn btn-primary">
+                        <span class="material-symbols-outlined">rocket_launch</span>
+                        Load 100 Sample Assets
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="app.js?v=4"></script>
+    <script>
+        // Initialize particles.js
+        particlesJS('particles-js', {
+            particles: {
+                number: {
+                    value: 80,
+                    density: { enable: true, value_area: 800 }
+                },
+                color: { value: '#00ddff' },
+                shape: { type: 'circle' },
+                opacity: {
+                    value: 0.3,
+                    random: true,
+                    animation: { enable: true, speed: 1, minimumValue: 0.1, sync: false }
+                },
+                size: {
+                    value: 3,
+                    random: true,
+                    animation: { enable: true, speed: 2, minimumValue: 0.5, sync: false }
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#00ddff',
+                    opacity: 0.15,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 1,
+                    direction: 'none',
+                    random: true,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: { enable: true, mode: 'grab' },
+                    onclick: { enable: true, mode: 'push' },
+                    resize: true
+                },
+                modes: {
+                    grab: { distance: 140, line_linked: { opacity: 0.4 } },
+                    push: { particles_nb: 4 }
+                }
+            },
+            retina_detect: true
+        });
+    </script>
+</body>
+
+</html>

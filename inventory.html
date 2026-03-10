@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cveResponderAI — Asset Inventory</title>
+    <meta name="description" content="Managed asset inventory for CVE vulnerability tracking.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="particles-js"></div>
+    <div class="ambient-glow"></div>
+
+    <!-- Header -->
+    <header class="header glass-panel" style="border-radius:0; border-top:none; border-left:none; border-right:none;">
+        <a href="index.html" class="logo">
+            <div class="logo-icon">
+                <span class="material-symbols-outlined" style="font-size:20px;">emergency</span>
+            </div>
+            <span class="logo-text">cveResponderAI</span>
+        </a>
+
+        <div class="flex items-center gap-3">
+            <a href="index.html" class="btn-ghost"
+                style="padding:6px 12px; border-radius:8px; font-size:13px; display:flex; align-items:center; gap:6px; text-decoration:none; color:var(--text-secondary);">
+                <span class="material-symbols-outlined" style="font-size:18px;">arrow_back</span>
+                Dashboard
+            </a>
+            <button id="theme-toggle" class="btn-ghost" style="padding:8px; border-radius:8px;" title="Toggle theme">
+                <span class="material-symbols-outlined" id="theme-icon">light_mode</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="relative z-10" style="min-height: calc(100vh - 65px);">
+        <div class="container" style="padding-top: 40px; padding-bottom: 80px; max-width: 1400px;">
+
+            <!-- Page Header -->
+            <div class="inv-page-header">
+                <div>
+                    <div class="flex items-center gap-3" style="margin-bottom: 8px;">
+                        <div class="inv-page-icon">
+                            <span class="material-symbols-outlined">inventory_2</span>
+                        </div>
+                        <h1 class="inv-page-title">Asset Inventory</h1>
+                    </div>
+                    <p class="inv-page-subtitle" id="inv-page-subtitle">Loading assets…</p>
+                </div>
+                <div class="inv-page-actions">
+                    <button id="inv-add-asset-btn" class="btn btn-primary" style="font-size:13px; padding:8px 18px;">
+                        <span class="material-symbols-outlined" style="font-size:16px;">add</span>
+                        Add Asset
+                    </button>
+                    <button id="inv-import-btn" class="btn-ghost inv-btn-ghost"
+                        style="font-size:13px; padding:8px 14px;">
+                        <span class="material-symbols-outlined" style="font-size:16px;">upload_file</span>
+                        Import CSV
+                    </button>
+                    <button id="inv-export-btn" class="btn-ghost inv-btn-ghost"
+                        style="font-size:13px; padding:8px 14px;">
+                        <span class="material-symbols-outlined" style="font-size:16px;">download</span>
+                        Export
+                    </button>
+                    <button id="inv-clear-btn" class="btn-ghost inv-btn-ghost inv-btn-danger"
+                        style="font-size:13px; padding:8px 14px;" title="Clear all assets">
+                        <span class="material-symbols-outlined" style="font-size:16px;">delete_sweep</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="inv-summary-row" id="inv-summary-row">
+                <div class="inv-summary-card">
+                    <span class="inv-summary-num" id="inv-stat-total">0</span>
+                    <span class="inv-summary-label">Total Assets</span>
+                </div>
+                <div class="inv-summary-card">
+                    <span class="inv-summary-num" id="inv-stat-prod">0</span>
+                    <span class="inv-summary-label">Production</span>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="inv-filter-bar glass-panel">
+                <div class="inv-search-wrap">
+                    <span class="material-symbols-outlined"
+                        style="font-size:18px; color:var(--text-muted);">search</span>
+                    <input type="text" id="inv-search" class="inv-search-input"
+                        placeholder="Search assets, products, vendors…">
+                </div>
+                <div class="inv-filter-group">
+                    <select id="inv-filter-env" class="inv-filter-select">
+                        <option value="">All Environments</option>
+                        <option value="Production">Production</option>
+                        <option value="Staging">Staging</option>
+                        <option value="Development">Development</option>
+                        <option value="DR">DR / Backup</option>
+                        <option value="Cloud">Cloud</option>
+                        <option value="On-Premise">On-Premise</option>
+                    </select>
+                </div>
+                <div class="inv-result-count" id="inv-result-count">— assets</div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="inv-table-wrapper glass-panel-solid">
+                <table class="inv-table" id="inv-table">
+                    <thead>
+                        <tr>
+                            <th class="inv-th inv-th-sortable" data-col="id">
+                                Asset ID <span class="material-symbols-outlined inv-sort-icon">unfold_more</span>
+                            </th>
+                            <th class="inv-th inv-th-sortable" data-col="product">
+                                Product / Vendor <span
+                                    class="material-symbols-outlined inv-sort-icon">unfold_more</span>
+                            </th>
+                            <th class="inv-th inv-th-sortable" data-col="version">
+                                Version <span class="material-symbols-outlined inv-sort-icon">unfold_more</span>
+                            </th>
+                            <th class="inv-th inv-th-sortable" data-col="environment">
+                                Environment <span class="material-symbols-outlined inv-sort-icon">unfold_more</span>
+                            </th>
+                            <th class="inv-th inv-th-sortable" data-col="owner">
+                                Owner <span class="material-symbols-outlined inv-sort-icon">unfold_more</span>
+                            </th>
+                            <th class="inv-th" style="width:80px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inv-table-body">
+                        <!-- Rows injected by JS -->
+                    </tbody>
+                </table>
+
+                <!-- Empty State -->
+                <div id="inv-empty-state" class="inv-empty-state" style="display:none;">
+                    <span class="material-symbols-outlined"
+                        style="font-size:56px; color:var(--text-muted); display:block; margin-bottom:16px;">inventory_2</span>
+                    <h3 style="color:var(--text-secondary); margin-bottom:8px;">No Assets Found</h3>
+                    <p style="color:var(--text-muted); font-size:14px; margin-bottom:24px;">
+                        Your inventory is empty. Import a CSV, add assets manually, or load the sample dataset.
+                    </p>
+                    <a href="index.html" class="btn btn-primary"
+                        style="font-size:13px; padding:8px 20px; text-decoration:none;">
+                        <span class="material-symbols-outlined" style="font-size:16px;">add</span>
+                        Go to Dashboard
+                    </a>
+                </div>
+
+                <!-- No filter results -->
+                <div id="inv-no-results" class="inv-empty-state" style="display:none;">
+                    <span class="material-symbols-outlined"
+                        style="font-size:48px; color:var(--text-muted); display:block; margin-bottom:14px;">search_off</span>
+                    <h3 style="color:var(--text-secondary); margin-bottom:6px;">No Matching Assets</h3>
+                    <p style="color:var(--text-muted); font-size:13px;">Try adjusting your search or filters.</p>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="inv-pagination" id="inv-pagination" style="display:none;">
+                <button id="inv-prev-page" class="inv-page-btn">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <span id="inv-page-info" class="inv-page-info"></span>
+                <button id="inv-next-page" class="inv-page-btn">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Add/Edit Asset Modal (reused from index) -->
+    <div id="inv-page-modal-overlay" class="inv-overlay" aria-hidden="true">
+        <div class="inv-modal glass-panel-solid" role="dialog" aria-modal="true" style="max-width:600px;">
+            <div class="inv-modal-header">
+                <div class="inv-modal-title-row">
+                    <div class="inv-modal-icon">
+                        <span class="material-symbols-outlined" id="inv-page-modal-icon">add_circle</span>
+                    </div>
+                    <div>
+                        <h2 class="inv-modal-title" id="inv-page-modal-title">Add Asset</h2>
+                        <p class="inv-modal-subtitle" id="inv-page-modal-subtitle">Fill in asset details below</p>
+                    </div>
+                </div>
+                <button id="inv-page-modal-close" class="inv-close-btn" aria-label="Close">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div style="padding: 0 24px 24px;">
+                <form id="inv-page-form" class="inv-form" autocomplete="off">
+                    <input type="hidden" id="inv-edit-index">
+                    <div class="inv-form-grid">
+                        <div class="inv-field">
+                            <label class="inv-label">Asset ID <span class="inv-required">*</span></label>
+                            <input type="text" id="inv-pf-id" class="inv-input" placeholder="e.g. ASSET-001" required>
+                        </div>
+                        <div class="inv-field">
+                            <label class="inv-label">Product Name <span class="inv-required">*</span></label>
+                            <input type="text" id="inv-pf-product" class="inv-input" placeholder="e.g. Apache Log4j"
+                                required>
+                        </div>
+                        <div class="inv-field">
+                            <label class="inv-label">Vendor <span class="inv-required">*</span></label>
+                            <input type="text" id="inv-pf-vendor" class="inv-input" placeholder="e.g. Apache" required>
+                        </div>
+                        <div class="inv-field">
+                            <label class="inv-label">Version <span class="inv-required">*</span></label>
+                            <input type="text" id="inv-pf-version" class="inv-input" placeholder="e.g. 2.14.1" required>
+                        </div>
+                        <div class="inv-field">
+                            <label class="inv-label">Environment</label>
+                            <select id="inv-pf-env" class="inv-input inv-select">
+                                <option value="Production">Production</option>
+                                <option value="Staging">Staging</option>
+                                <option value="Development">Development</option>
+                                <option value="DR">DR / Backup</option>
+                                <option value="Cloud">Cloud</option>
+                                <option value="On-Premise">On-Premise</option>
+                            </select>
+                        </div>
+                        <div class="inv-field">
+                            <label class="inv-label">Owner</label>
+                            <input type="text" id="inv-pf-owner" class="inv-input" placeholder="e.g. Platform Team">
+                        </div>
+                    </div>
+                    <div class="inv-form-actions">
+                        <button type="submit" class="btn btn-primary" id="inv-page-form-submit">
+                            <span class="material-symbols-outlined">save</span>
+                            Save Asset
+                        </button>
+                        <button type="button" id="inv-page-modal-cancel" class="btn-ghost inv-btn-ghost">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inline CSV Import (inventory page) -->
+    <div id="inv-page-import-overlay" class="inv-overlay" aria-hidden="true">
+        <div class="inv-modal glass-panel-solid" role="dialog" aria-modal="true" style="max-width:620px;">
+            <div class="inv-modal-header">
+                <div class="inv-modal-title-row">
+                    <div class="inv-modal-icon">
+                        <span class="material-symbols-outlined">upload_file</span>
+                    </div>
+                    <div>
+                        <h2 class="inv-modal-title">Import Assets</h2>
+                        <p class="inv-modal-subtitle">Drag and drop or browse for a CSV file</p>
+                    </div>
+                </div>
+                <button id="inv-page-import-close" class="inv-close-btn">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div style="padding:0 24px 24px;">
+                <div class="inv-upload-zone" id="inv-page-drop-zone">
+                    <span class="material-symbols-outlined inv-upload-icon">cloud_upload</span>
+                    <p class="inv-upload-title">Drop your CSV here</p>
+                    <p class="inv-upload-sub">or <label for="inv-page-file-input" class="inv-file-label">browse
+                            files</label></p>
+                    <input type="file" id="inv-page-file-input" accept=".csv" style="display:none;">
+                    <div class="inv-upload-schema">
+                        <span class="inv-schema-label">Expected columns:</span>
+                        <code>Asset ID, Product Name, Vendor, Version, Environment, Owner</code>
+                    </div>
+                </div>
+                <div id="inv-page-csv-preview" class="inv-csv-preview" style="display:none;"></div>
+                <div class="inv-import-actions" style="display:none;" id="inv-page-import-actions">
+                    <button id="inv-page-confirm-import" class="btn btn-primary">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        <span id="inv-page-import-count">Import 0 Assets</span>
+                    </button>
+                    <button id="inv-page-cancel-import" class="btn-ghost inv-btn-ghost">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="app.js?v=4"></script>
+    <script>
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 50, density: { enable: true, value_area: 900 } },
+                color: { value: '#00ddff' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.2, random: true, animation: { enable: true, speed: 0.8, minimumValue: 0.05, sync: false } },
+                size: { value: 2.5, random: true },
+                line_linked: { enable: true, distance: 130, color: '#00ddff', opacity: 0.1, width: 1 },
+                move: { enable: true, speed: 0.6, direction: 'none', random: true, out_mode: 'out' }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: { onhover: { enable: true, mode: 'grab' }, resize: true },
+                modes: { grab: { distance: 120, line_linked: { opacity: 0.25 } } }
+            },
+            retina_detect: true
+        });
+    </script>
+</body>
+
+</html>
