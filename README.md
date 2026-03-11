@@ -34,8 +34,8 @@ Project resources for the **Black Hat Arsenal** submission:
 
 | Resource | Description |
 |--------|--------|
-| **[Whitepaper](file:///Users/emrahyildirim/dev/cveResponderAI/docs/whitepaper.pdf)** | Detailed analysis of architecture, methodology, and real-world use cases. |
-| **`demo/`** | Screen recordings and workflow demonstrations (coming soon). |
+| **[docs/](./docs/)** | Detailed analysis of architecture, methodology, whitepaper and real-world use cases. |
+| **[demo/](./demo/)** | Screen recordings and workflow demonstrations. |
 
 ### 🎬 Live Demo Outline
 1. **KEV Triage:** Ingest a high-impact CISA KEV entry and review integrated risk context.
@@ -102,10 +102,20 @@ Queries multiple security news sources (e.g., The Hacker News, BleepingComputer)
 ## 🛠️ Installation & Setup
 
 1.  **Install Ollama:** Download from [ollama.com](https://ollama.com).
-2.  **Pull Models:**
-    ```bash
-    ollama pull qwen3.5:9b
-    ```
+2.  **Pull & Start Models:**
+    *   **Primary (Recommended):**
+        ```bash
+        ollama pull qwen3.5:9b
+        ```
+    *   **Optional (Other tested models):**
+        ```bash
+        ollama pull deepseek-r1:14b
+        ollama pull llama3.1:8b
+        ```
+    *   **Note:** If the Ollama server is not running in the background, start it using:
+        ```bash
+        ollama serve
+        ```
 3.  **Clone & Install:**
     ```bash
     git clone https://github.com/emr4h/cveResponderAI.git
