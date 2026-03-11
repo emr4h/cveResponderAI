@@ -1,7 +1,5 @@
 # cveResponderAI 🛡️
 
-![demo](demo/demo.mp4)
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/emr4h/cveResponderAI/blob/main/LICENSE)
 [![Repo](https://img.shields.io/badge/GitHub-emr4h%2FcveResponderAI-blue)](https://github.com/emr4h/cveResponderAI)
 
