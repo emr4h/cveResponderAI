@@ -557,10 +557,10 @@ async function checkBackendStatus() {
 // Default CVEs chosen to showcase all tool features: CISA KEV, PoC Explainer, Affected/Inventory, IR Plan, MITRE
 const DEFAULT_HISTORY = [
     {
-        cveId: "CVE-2022-20775",
-        severity: "HIGH",
-        title: "Cisco SD-WAN Privilege Escalation",
-        description: "Cisco SD-WAN Software CLI vulnerability; CISA KEV, many affected products — ideal for inventory matching and KEV banner.",
+        cveId: "CVE-2021-44228",
+        severity: "CRITICAL",
+        title: "Log4Shell RCE in Apache Log4j 2",
+        description: "Critical RCE in Apache Log4j 2; massive global impact; public PoCs — perfect for deep analysis and IR planning.",
         timestamp: new Date().getTime() - 120000
     },
     {
