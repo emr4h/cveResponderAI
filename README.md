@@ -21,8 +21,8 @@ In the high-pressure environment of Incident Response, analysts face three criti
 
 **cveResponderAI** provides a cohesive, local-first dashboard built to accelerate the path from raw CVE publication to operational response.
 
-- **Local-first AI:** Model execution stays entirely on the analyst host through Ollama, protecting sensitive internal data.
-- **Operator-Centric Workflow:** A single interface for CVE lookup, OSINT enrichment, behavior mapping, and IR planning.
+- **Local AI execution:** Model reasoning stays entirely on the analyst host through Ollama, protecting sensitive internal data.
+- **Unified Analyst Workflow:** A single interface for CVE lookup, OSINT enrichment, behavior mapping, and IR planning.
 - **Asset Awareness:** Affected products are automatically parsed from CPE strings and correlated with local inventory to answer the immediate question: *"Does this hit us?"*
 - **Resilient Reasoning:** A built-in recovery layer ensures that even if local models return imperfect formatting, the system reconstructs structured, usable reports.
 
@@ -44,6 +44,18 @@ Project resources for the **Black Hat Arsenal** submission:
 
 ---
 
+## 🧠 How it Works: LLM Prompt Context
+
+To generate accurate **MITRE mappings** and **Incident Response Plans**, cveResponderAI builds a rich, structured prompt context for the local model using the following data points:
+
+*   **NVD Metadata:** Full CVE descriptions, CVSS 3.x/4.0 metrics, and associated CWE identifiers.
+*   **CISA KEV Catalog:** Exploitation status, "due dates," and specific remediation notes from CISA.
+*   **OSINT/News Fragments:** Compressed snippets from recent security advisories and authority news sites to provide "in-the-wild" context.
+*   **PoC Metadata:** Details on public exploit availability (from GitHub) and basic structural analysis results of any provided code.
+*   **Internal Inventory Data:** Context on matching local assets to help the model prioritize mitigation steps for specific environments.
+
+---
+
 ## 🏗️ Technical Stack
 
 | Component | Technology |
@@ -51,7 +63,7 @@ Project resources for the **Black Hat Arsenal** submission:
 | **Backend** | Python 3.x / Flask |
 | **CVE Sources** | NVD API v2 + CISA KEV JSON feed |
 | **Intelligence** | Local MITRE ATT&CK dataset (`data/mitre-attack.json`) |
-| **AI Runtime** | Ollama (`localhost:11434`) + Recovery Layer Logic |
+| **AI Runtime** | Ollama (`localhost:11434`) + Hybrid JSON/Text Recovery |
 | **Frontend** | Vanilla JavaScript + Modern CSS (Zero Build Chain) |
 
 ---
@@ -60,9 +72,9 @@ Project resources for the **Black Hat Arsenal** submission:
 
 The tool is dynamically tuned for these local models:
 
-1. **qwen3.5:9b** — Excellent balance of speed and reliable structured JSON output.
-2. **deepseek-r1:14b** — Recommended for **PoC Explainer** due to superior reasoning capabilities.
-3. **llama3.1:8b** — Solid general-purpose model for quick triage and broad guidance.
+1. **qwen3.5:9b** — General-purpose choice; excellent balance of speed and reliable structured output.
+2. **deepseek-r1:14b** — Recommended for **PoC Explainer** due to superior reasoning and code analysis.
+3. **llama3.1:8b** — Solid general security model for quick triage and broad mitigation guidance.
 
 *Hardware Note: 16GB RAM is recommended; Apple Silicon or dedicated GPUs significantly improve performance.*
 
@@ -71,19 +83,19 @@ The tool is dynamically tuned for these local models:
 ## 💡 Main Features
 
 ### 🛡️ Automated IR Planning
-Takes the full CVE context and generates **8–12** concrete detection ideas (Event IDs, log patterns, SIEM logic) and **8–12** mitigation steps to bridge the gap between triage and action.
+Aggregates full CVE context to generate **8–12** concrete detection ideas (Event IDs, log patterns, SIEM logic) and **8–12** mitigation steps to bridge the gap between triage and action.
 
 ### 🎯 MITRE ATT&CK Mapping
-Correlates vulnerability data with a local ATT&CK library to suggest TTPs. The AI provides a specific **rationale** for each mapping, helping analysts frame the threat behaviorally.
+Correlates vulnerability data with the offline ATT&CK library to suggest TTPs. The AI provides a specific **rationale** for each mapping, helping analysts frame the threat behaviorally.
 
 ### ⚡ PoC Explainer & Attack Path
-Allows analysts to paste exploit code for local analysis. The tool identifies **critical mechanics** and visualizes the **attack path**—a step-by-step flow from exploitation to impact.
+Allows analysts to paste exploit code for local analysis. The tool identifies **critical mechanics** and visualizes the **attack path**—a step-by-step flow from initial entry to final impact.
 
 ### 📦 Affected Products & Inventory Correlation
-Simplifies complex NVD CPE strings into readable product cards and performs risk-based matching against the internal asset inventory.
+Simplifies complex NVD CPE strings into readable cards and performs risk-based matching against the internal asset inventory records.
 
 ### 📰 OSINT & News Aggregation
-Queries multiple security news sources in parallel (e.g., The Hacker News, BleepingComputer, CISA) to provide current situational awareness without leaving the tool.
+Queries multiple security news sources (e.g., The Hacker News, BleepingComputer) in parallel to provide situational awareness of current exploitation trends.
 
 ---
 
