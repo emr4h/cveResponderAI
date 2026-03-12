@@ -1,5 +1,8 @@
 # cveResponderAI 🛡️
 
+<img width="1728" height="1117" alt="Ekran Resmi 2026-03-12 13 11 05" src="https://github.com/user-attachments/assets/286bc95b-7afc-420f-8bd6-29a528421623" />
+
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/emr4h/cveResponderAI/blob/main/LICENSE)
 [![Repo](https://img.shields.io/badge/GitHub-emr4h%2FcveResponderAI-blue)](https://github.com/emr4h/cveResponderAI)
 
@@ -81,6 +84,8 @@ The tool is dynamically tuned for these local models:
 ---
 
 ## 💡 Main Features
+
+https://github.com/user-attachments/assets/a16c0f15-9a14-4ced-abd7-1cfd0e3660e6
 
 ### 🛡️ Automated IR Planning
 Aggregates full CVE context to generate **8–12** concrete detection ideas (Event IDs, log patterns, SIEM logic) and **8–12** mitigation steps to bridge the gap between triage and action.
