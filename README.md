@@ -31,16 +31,16 @@ In the high-pressure environment of Incident Response, analysts face three criti
 
 ---
 
-## 🚩 Black Hat Arsenal — Docs & Demo
+## 📚 Docs & Demo
 
-Project resources for the **Black Hat Arsenal** submission:
+Project resources:
 
 | Resource | Description |
 |--------|--------|
 | **[docs/](./docs/)** | Detailed analysis of architecture, methodology, whitepaper and real-world use cases. |
 | **[demo/](./demo/)** | Screen recordings and workflow demonstrations. |
 
-### 🎬 Live Demo Outline
+### 🎬 Demo Outline
 1. **KEV Triage:** Ingest a high-impact CISA KEV entry and review integrated risk context.
 2. **Local Reasoning:** Use the **PoC Explainer** to analyze obfuscated exploit code locally.
 3. **Actionable Output:** Generate a complete IR plan with 10+ detection and mitigation strategies.
@@ -149,4 +149,4 @@ This project is licensed under the **MIT License** — see [LICENSE](LICENSE).
 
 ---
 
-*Presented by **emr4h** at Black Hat Arsenal.*
+*Developed by **emr4h**.*

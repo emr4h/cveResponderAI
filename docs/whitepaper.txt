@@ -92,8 +92,8 @@ Figure 1. Dashboard and local model selection.
 4. Product Workflow and Feature Deep Dive
 4.1 End-to-End Workflow View
 The main workflow page organizes the analysis into practical response stages: basic CVE details,
-affected products, PoC discovery, news, MITRE ATT&CK mapping, and the IR plan. This is important for
-Black Hat Arsenal because the tool is not just a backend utility; it is a live operator-facing workflow built
+affected products, PoC discovery, news, MITRE ATT&CK mapping, and the IR plan. This is important
+because the tool is not just a backend utility; it is a live operator-facing workflow built
 for demo and day-to-day use.
 
 4.1.1 Workflow Summary
@@ -187,7 +187,7 @@ Local LLMs, especially smaller quantized models, do not always return perfectly 
 cveResponderAI addresses this with a recovery layer that strips model-specific reasoning blocks,
 detects key defensive sections, and reconstructs normalized arrays for detection and mitigation
 content.
-This matters in practice because an Arsenal demo should show a tool that is resilient, not one that only
+This matters in practice because a live demo should show a tool that is resilient, not one that only
 works under ideal prompt conditions.
 
 5. Technical Implementation & Requirements
@@ -287,8 +287,8 @@ This use case shows the practical value of cveResponderAI: it turns a single CVE
 connected local workflow for exposure review, exploit understanding, ATT&CK framing, and defensive
 action.
 
-7. Black Hat Arsenal Positioning and Demo Plan
-cveResponderAI matches the spirit of Black Hat Arsenal by presenting a practical, open-source, and
+7. Project Positioning and Demo Plan
+cveResponderAI presents a practical, open-source, and
 technically detailed defensive workflow for real operators.
 •
 
@@ -310,9 +310,9 @@ under operator control.
 Operational relevance: It combines CVE data, product exposure, exploit awareness, ATT&CK
 mapping, and IR planning in one interface.
 
-Planned Arsenal Demo Flow
+Planned Demo Flow
 
-The live Arsenal demo will follow the same workflow described in this paper:
+The live demo will follow the same workflow described in this paper:
 1. Select a local Ollama model from the dashboard
 2. Analyze a high-impact CVE
 3. Review KEV status, references, and affected products
@@ -328,7 +328,7 @@ matters. cveResponderAI gives Incident Responders a local-first AI assistant tha
 switching, protects sensitive analysis from cloud exposure, and turns raw CVE identifiers into structured
 defensive guidance.
 By combining public vulnerability data, optional enrichment, local LLM reasoning, and operator-focused
-workflow design, the project offers a strong fit for Black Hat Arsenal and for modern defensive teams
+workflow design, the project offers a strong fit for modern defensive teams
 that want practical AI support without giving up data control.
 Repository: HTTPS://GITHUB.COM/EMR4H/CVERESPONDERAI
 
